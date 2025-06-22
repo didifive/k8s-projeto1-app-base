@@ -1,0 +1,20 @@
+FROM mysql:9.3
+
+WORKDIR /var/lib/mysql
+
+COPY .env /tmp/.env
+
+RUN export $(cat /tmp/.env | xargs) && \
+    echo "Environment variables from .env file"
+
+ARG DB_NAME
+ARG DB_USER
+ARG DB_PASSWORD
+
+ENV MYSQL_DATABASE=${DB_NAME}
+ENV MYSQL_USER=${DB_USER}
+ENV MYSQL_PASSWORD=${DB_PASSWORD}
+
+ADD sql.sql /docker-entrypoint-initdb.d
+
+EXPOSE 3306
